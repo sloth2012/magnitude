@@ -314,17 +314,18 @@ def download_and_install_wheel():
     tmpwhl_dir = tempfile.gettempdir()
     for whl in get_supported_wheels():
         exitcodes = []
-        whl_url = RM_WHEELHOUSE + whl
-        dl_path = os.path.join(tmpwhl_dir, whl)
-        try:
-            print("Trying...", whl_url)
-            urlretrieve(whl_url, dl_path)
-        except BaseException:
-            print("FAILED")
-            continue
-        extract_dir = os.path.join(
-            tempfile.gettempdir(), whl.replace(
-                '.whl', ''))
+        if not os.path.exists(whl):
+            whl_url = RM_WHEELHOUSE + whl
+            dl_path = os.path.join(tmpwhl_dir, whl)
+            try:
+                print("Trying...", whl_url)
+                urlretrieve(whl_url, dl_path)
+            except BaseException:
+                print("FAILED")
+                continue
+        else:
+            dl_path = whl
+
         extract_dir = os.path.join(
             tempfile.gettempdir(), whl.replace(
                 '.whl', ''))
